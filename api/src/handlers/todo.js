@@ -41,23 +41,11 @@ exports.AddTodo = async (request, h) => {
     }
     var todo = new TodoModel();
     todo.title = requests.payload.title;
-    await todo.save(err => {
+    todo.author = request.payload.userId;
+    todo.save(err => {
         if (err) throw Boom.internal('Could not save new todo', err);
-    })
-    const query = UserModel.findById(userId).populate('todos');
-    try {
-        var user = await query.exec();
-    } catch (err) {
-        return Boom.internal('Could not find user', err);
-    }
-    if (!user) {
-        return Boom.notFound('User not found');
-    }
-    user.todos.push(todo['_id']);
-    user.save((err) => {
-        if (err) throw Boom.internal('Could not save new todo in user', err);
         return {statusCode: 200, error: false, message: todo}
-    });
+    })
 };
 
 exports.UpdateTodo = async (request, h) => {
@@ -123,6 +111,7 @@ exports.DuplicateTodo = async (request, h) => {
     var duplicatedTodo = new TodoModel();
     duplicatedTodo.title = todo.title;
     duplicatedTodo.completed = todo.completed;
+    duplicatedTodo.author = todo.author;
     duplicatedTodo.save(err => {
         if (err) throw Boom.internal('Could not save todo', err);
         return {statusCode: 200, error: false, message: duplicatedTodo}

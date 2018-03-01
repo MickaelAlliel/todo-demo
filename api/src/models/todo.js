@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
     title: String,
-    completed: { type: Boolean, default: false }
+    completed: { type: Boolean, default: false },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 });
 
 Schema.virtual('created_on').get(() => {
