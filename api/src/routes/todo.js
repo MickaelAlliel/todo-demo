@@ -13,29 +13,29 @@ todoRoutes.push({
     handler: TodoHandlers.GetUserTodos
 });
 
-todo.Routes.push({
+todoRoutes.push({
     method: 'POST',
     path: '/todos',
     handler: TodoHandlers.AddTodo
 });
 
-todo.Routes.push({
+todoRoutes.push({
     method: 'PUT',
     path: '/todos',
     handler: TodoHandlers.UpdateTodo
 });
 
-todo.Routes.push({
+todoRoutes.push({
     method: 'DELETE',
     path: '/todos/{id}',
     handler: TodoHandlers.DeleteTodo
 });
 
-todo.Routes.push({
+todoRoutes.push({
     method: 'POST',
     path: '/todos/duplicate/{id}',
     handler: TodoHandlers.DuplicateTodo
 });
 
 
-export default todoRoutes;
+module.exports = todoRoutes;

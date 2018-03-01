@@ -1,27 +1,23 @@
-var handlers = {};
-
-handlers.GetAllTodos = (req, res) => {
-
+exports.GetAllTodos = (request, reply) => {
+    return reply({code: 200, error: false, message: ''})
 };
 
-handlers.GetUserTodos = (req, res) => {
-
+exports.GetUserTodos = (request, reply) => {
+    return reply({code: 200, error: false, message: ''})
 };
 
-handlers.AddTodo = (req, res) => {
-
+exports.AddTodo = (request, reply) => {
+    return reply({code: 200, error: false, message: ''})
 };
 
-handlers.UpdateTodo = (req, res) => {
-
+exports.UpdateTodo = (request, reply) => {
+    return reply({code: 200, error: false, message: ''})
 };
 
-handlers.DeleteTodo = (req, res) => {
-
+exports.DeleteTodo = (request, reply) => {
+    return reply({code: 200, error: false, message: ''})
 };
 
-handlers.DuplicateTodo = (req, res) => {
-
+exports.DuplicateTodo = (request, reply) => {
+    return reply({code: 200, error: false, message: ''})
 };
-
-export default handlers;

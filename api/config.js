@@ -21,7 +21,7 @@ const goodOptions = {
     }
 }
 
-export {
+module.exports = {
     swaggerOptions,
     goodOptions
 }

@@ -1,5 +1,3 @@
 const todoRoutes = require('./todo');
 
-export default [
-    todoRoutes
-]
+module.exports = [].concat(todoRoutes);

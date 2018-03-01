@@ -10,7 +10,7 @@ const Routes = require('./src/routes')
 
 // Create a server with a host and port
 const server = new Hapi.Server();
-server.connection({ host: 'localhost', port: 3000 });
+server.connection = { host: 'localhost', port: 3000 };
 
 // Register logging plugin
 server.register({ register: Good, options: config.goodOptions });
