@@ -1,41 +1,41 @@
-const TodoHandlers = require('../handlers/todoHandlers');
-var todoRoutes = [];
+const TodoHandlers = require('../handlers/todo');
+var routes = [];
 
-todoRoutes.push({
+routes.push({
     method: 'GET',
     path: '/todos',
     handler: TodoHandlers.GetAllTodos
 });
 
-todoRoutes.push({
+routes.push({
     method: 'GET',
     path: '/todos/user/{id}',
     handler: TodoHandlers.GetUserTodos
 });
 
-todoRoutes.push({
+routes.push({
     method: 'POST',
     path: '/todos',
     handler: TodoHandlers.AddTodo
 });
 
-todoRoutes.push({
+routes.push({
     method: 'PUT',
     path: '/todos',
     handler: TodoHandlers.UpdateTodo
 });
 
-todoRoutes.push({
+routes.push({
     method: 'DELETE',
     path: '/todos/{id}',
     handler: TodoHandlers.DeleteTodo
 });
 
-todoRoutes.push({
+routes.push({
     method: 'POST',
     path: '/todos/duplicate/{id}',
     handler: TodoHandlers.DuplicateTodo
 });
 
 
-module.exports = todoRoutes;
+module.exports = routes;

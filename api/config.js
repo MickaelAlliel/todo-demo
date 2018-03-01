@@ -25,5 +25,6 @@ const goodOptions = {
 
 module.exports = {
     swaggerOptions,
-    goodOptions
+    goodOptions,
+    dbUri: "mongodb://localhost/todoapp"
 }
