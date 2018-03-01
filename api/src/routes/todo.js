@@ -1,40 +1,124 @@
 const TodoHandlers = require('../handlers/todo');
+const Joi = require('joi');
 var routes = [];
 
 routes.push({
     method: 'GET',
     path: '/todos',
-    handler: TodoHandlers.GetAllTodos
+    config: {
+        handler: TodoHandlers.GetAllTodos,
+        description: 'Retrieves all existing todos',
+        tags: ['api'],
+        plugins: {
+            'hapi-swagger': {
+                payloadType: 'form'
+            }
+        },
+        validate: {
+            
+        }
+    }
 });
 
 routes.push({
     method: 'GET',
     path: '/todos/user/{id}',
-    handler: TodoHandlers.GetUserTodos
+    config: {
+        handler: TodoHandlers.GetUserTodos,
+        description: 'Retrieves all todos owned by a specific user',
+        tags: ['api'],
+        plugins: {
+            'hapi-swagger': {
+                payloadType: 'form'
+            }
+        },
+        validate: {
+            params: {
+                id: Joi.string().required()
+            }
+        }
+    }
 });
 
 routes.push({
     method: 'POST',
     path: '/todos',
-    handler: TodoHandlers.AddTodo
+    config: {
+        handler: TodoHandlers.AddTodo,
+        description: 'Creates a new Todo',
+        tags: ['api'],
+        plugins: {
+            'hapi-swagger': {
+                payloadType: 'form'
+            }
+        },
+        validate: {
+            payload: {
+                title: Joi.string().required()
+            }
+        }
+    }
 });
 
 routes.push({
     method: 'PUT',
     path: '/todos',
-    handler: TodoHandlers.UpdateTodo
+    config: {
+        handler: TodoHandlers.UpdateTodo,
+        description: 'Updates an existing todo',
+        tags: ['api'],
+        plugins: {
+            'hapi-swagger': {
+                payloadType: 'form'
+            }
+        },
+        validate: {
+            payload: {
+                title: Joi.string(),
+                completed: Joi.boolean()
+            }
+        }
+    }
 });
 
 routes.push({
     method: 'DELETE',
     path: '/todos/{id}',
-    handler: TodoHandlers.DeleteTodo
+    config: {
+        handler: TodoHandlers.DeleteTodo,
+        description: 'Delete a specific todo by ID',
+        tags: ['api'],
+        plugins: {
+            'hapi-swagger': {
+                payloadType: 'form'
+            }
+        },
+        validate: {
+            params: {
+                id: Joi.string().required()
+            }
+        }
+    }
 });
 
 routes.push({
     method: 'POST',
     path: '/todos/duplicate/{id}',
-    handler: TodoHandlers.DuplicateTodo
+    config: {
+        handler: TodoHandlers.DuplicateTodo,
+        description: 'Duplicate a todo',
+        tags: ['api'],
+        plugins: {
+            'hapi-swagger': {
+                payloadType: 'form'
+            }
+        },
+        validate: {
+            params: {
+                id: Joi.string().required()
+            }
+        }
+    }
 });
 
 

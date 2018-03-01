@@ -1,7 +1,7 @@
 var config = require('../../config');
 var mongoose = require('mongoose');
 
-mongoose.connect(config.dbUri, {useMongoClient: true});
+mongoose.connect(config.dbUri);
 
 mongoose.connection.on('connected', function () {
   console.log('mongodb connection established at : ' + config.dbUri);

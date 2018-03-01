@@ -5,6 +5,7 @@ const swaggerOptions = {
       'title': 'Todo Demo App API Documentation',
       'version': Package.version,
     },
+    //basePath: '/api',
     documentationPage: process.env.NODE_ENV == 'PROD' ? false : true,
   };
 
@@ -26,5 +27,6 @@ const goodOptions = {
 module.exports = {
     swaggerOptions,
     goodOptions,
-    dbUri: "mongodb://localhost/todoapp"
+    dbUri: "mongodb://localhost/todoapp",
+    urlPrefix: "/api"
 }

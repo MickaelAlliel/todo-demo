@@ -1,4 +1,6 @@
 const Boom = require('boom');
+const UserModel = require('../models/user');
+const TodoModel = require('../models/todo');
 
 
 exports.GetAllTodos = (request, h) => {

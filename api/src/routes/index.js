@@ -1,4 +1,5 @@
 const todoRoutes = require('./todo');
+const userRoutes = require('./user');
 
 const statusRoute = {
     method: 'GET',
@@ -8,4 +9,4 @@ const statusRoute = {
     }
 }
 
-module.exports = [statusRoute].concat(todoRoutes);
+module.exports = [statusRoute].concat(todoRoutes, userRoutes);

@@ -5,13 +5,16 @@ const HapiSwagger = require('hapi-swagger');
 const Vision = require('vision');
 const Inert = require('inert');
 const config = require('./config');
-
-const Routes = require('./src/routes')
+const dbConnection = require('./src/utils/dbConnection');
+const Routes = require('./src/routes');
 
 // Create a server with a host and port
 const server = new Hapi.Server({ host: 'localhost', port: 3000 });
 
 async function registerServer() {
+    // Register routes
+    await server.route(Routes);
+
     // Register logging and swagger plugin
     await server.register([
         Inert,
@@ -19,11 +22,8 @@ async function registerServer() {
         { plugin: HapiSwagger, options: config.swaggerOptions },
         { plugin: Good, options: config.goodOptions }
     ], {
-        routes: { prefix: '/api' }
+        //routes: { prefix: '/api' }
     });
-
-    // Register routes
-    server.route(Routes);
 }
 
 // Start the server
