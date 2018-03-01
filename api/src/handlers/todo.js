@@ -4,7 +4,7 @@ const TodoModel = require('../models/todo');
 
 
 exports.GetAllTodos = async (request, h) => {
-    const query = TodoModel.find({});
+    const query = TodoModel.find({}).populate('author');
     try {
         var todos = await query.exec();
     } catch (err) {
@@ -21,18 +21,16 @@ exports.GetUserTodos = async (request, h) => {
         throw Boom.badRequest('User ID is a required parameter')
     }
     let userId = request.params.id;
-    const query = UserModel.findById(userId).populate('todos');
+    const query = TodoModel.find({author: userId}).populate('todos');
     try {
-        var user = await query.exec();
+        var todos = await query.exec();
     } catch (err) {
-        return Boom.internal('Could not find user', err);
+        return Boom.internal('Could not find todos', err);
     }
-    if (!user) {
-        return Boom.notFound('User not found');
+    if (!todos) {
+        return Boom.notFound('Todos not found');
     }
-    let userTodos = user.todos;
-
-    return {statusCode: 200, error: false, message: userTodos}
+    return {statusCode: 200, error: false, message: todos}
 };
 
 exports.AddTodo = async (request, h) => {
@@ -40,12 +38,12 @@ exports.AddTodo = async (request, h) => {
         throw Boom.badRequest('Missing required payload parameters');
     }
     var todo = new TodoModel();
-    todo.title = requests.payload.title;
+    todo.title = request.payload.title;
     todo.author = request.payload.userId;
-    todo.save(err => {
+    await todo.save(err => {
         if (err) throw Boom.internal('Could not save new todo', err);
-        return {statusCode: 200, error: false, message: todo}
-    })
+    });
+    return {statusCode: 200, error: false, message: todo}
 };
 
 exports.UpdateTodo = async (request, h) => {
@@ -68,10 +66,11 @@ exports.UpdateTodo = async (request, h) => {
     if (request.payload.completed) {
         todo.completed = request.payload.completed;
     }
-    todo.save(err => {
+    await todo.save(err => {
         if (err) throw Boom.internal('Could not save todo', err);
-        return {statusCode: 200, error: false, message: ''}
     });
+    return {statusCode: 200, error: false, message: ''}
+
 };
 
 exports.DeleteTodo = async (request, h) => {
@@ -88,7 +87,7 @@ exports.DeleteTodo = async (request, h) => {
     if (!todo) {
         return Boom.notFound('Todo not found');
     }
-    todo.remove(err => {
+    await todo.remove(err => {
         if (err) throw Boom.expectationFailed('Could not delete todo', err);
     });
     return {statusCode: 200, error: false, message: 'Successfully deleted todo'}
@@ -112,8 +111,8 @@ exports.DuplicateTodo = async (request, h) => {
     duplicatedTodo.title = todo.title;
     duplicatedTodo.completed = todo.completed;
     duplicatedTodo.author = todo.author;
-    duplicatedTodo.save(err => {
+    await duplicatedTodo.save(err => {
         if (err) throw Boom.internal('Could not save todo', err);
-        return {statusCode: 200, error: false, message: duplicatedTodo}
     });
+    return {statusCode: 200, error: false, message: duplicatedTodo}
 };

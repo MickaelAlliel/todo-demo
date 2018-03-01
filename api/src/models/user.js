@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
-    todos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Todo' }]
+    // Dummy user
 });
 
 Schema.virtual('created_on').get(() => {
