@@ -1,7 +1,9 @@
+const Package = require('./package');
+
 const swaggerOptions = {
     info: {
       'title': 'Todo Demo App API Documentation',
-      'version': '1.0.0',
+      'version': Package.version,
     },
     documentationPage: process.env.NODE_ENV == 'PROD' ? false : true,
   };
