@@ -21,7 +21,7 @@ exports.GetUserTodos = async (request, h) => {
         throw Boom.badRequest('User ID is a required parameter')
     }
     let userId = request.params.id;
-    const query = TodoModel.find({author: userId}).populate('todos');
+    const query = TodoModel.find({author: userId}).populate('author');
     try {
         var todos = await query.exec();
     } catch (err) {
@@ -51,7 +51,7 @@ exports.UpdateTodo = async (request, h) => {
         throw Boom.badRequest('Missing required parameter Todo ID');
     }
     let todoId = request.params.id;
-    const query = TodoModel.findById(todoId);
+    const query = TodoModel.findById(todoId).populate('author');
     try {
         var todo = await query.exec();
     } catch (err) {
