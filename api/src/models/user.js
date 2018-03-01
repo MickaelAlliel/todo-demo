@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
-    // Dummy user
+    machine_id: String
 });
 
 Schema.virtual('created_on').get(() => {

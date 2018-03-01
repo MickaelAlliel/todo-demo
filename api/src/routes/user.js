@@ -23,6 +23,26 @@ routes.push({
 });
 
 routes.push({
+    method: 'GET',
+    path: '/users/machine/{machineId}',
+    config: {
+        handler: UserHandlers.GetUserByMachineId,
+        description: 'Retrieves a user by its Machine ID',
+        tags: ['api'],
+        plugins: {
+            'hapi-swagger': {
+                payloadType: 'form'
+            }
+        },
+        validate: {
+            params: {
+                machineId: Joi.string().required()
+            }
+        }
+    }
+});
+
+routes.push({
     method: 'POST',
     path: '/users',
     config: {
@@ -36,7 +56,7 @@ routes.push({
         },
         validate: {
             payload: {
-
+                machineId: Joi.string().required()
             }
         }
     }
