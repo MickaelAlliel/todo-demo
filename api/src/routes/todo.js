@@ -54,7 +54,8 @@ routes.push({
         },
         validate: {
             payload: {
-                title: Joi.string().required()
+                title: Joi.string().required(),
+                userId: Joi.string().required()
             }
         }
     }
@@ -62,7 +63,7 @@ routes.push({
 
 routes.push({
     method: 'PUT',
-    path: '/todos',
+    path: '/todos/{id}',
     config: {
         handler: TodoHandlers.UpdateTodo,
         description: 'Updates an existing todo',
@@ -73,6 +74,9 @@ routes.push({
             }
         },
         validate: {
+            params: {
+                id: Joi.string()
+            },
             payload: {
                 title: Joi.string(),
                 completed: Joi.boolean()
