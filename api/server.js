@@ -15,7 +15,7 @@ async function registerServer() {
     // Register routes
     await server.route(Routes);
 
-    // Register logging and swagger plugin
+    // Register logging and documentation plugin
     await server.register([
         Inert,
         Vision,
