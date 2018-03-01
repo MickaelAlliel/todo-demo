@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
-
+const Schema = new mongoose.Schema({
+    todos: [{ type: Schema.Types.ObjectId, ref: 'Todo' }]
 });
 
-UserSchema.virtual('created_on').get(() => {
+Schema.virtual('created_on').get(() => {
     return this._id.getTimestamp();
 })
 
-module.exports = mongoose.model('Todo', UserSchema);
+module.exports = mongoose.model('User', Schema);
