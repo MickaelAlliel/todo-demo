@@ -11,7 +11,10 @@ exports.GetUserById = async (request, h) => {
     try {
         var user = await query.exec();
     } catch (err) {
-        return Boom.notFound('User not found', err);
+        return Boom.internal('Could not find user', err);
+    }
+    if (!user) {
+        return Boom.notFound('User not found');
     }
     return {statusCode: 200, error: false, message: user}
 };
