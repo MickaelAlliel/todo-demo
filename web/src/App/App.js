@@ -6,14 +6,14 @@ import TodoItem from '../TodoItem/TodoItem';
 
 class App extends Component {
   constructor(props) {
-    super(props);
-
-    var footer = Footer;
-    var main = "";
+		super(props);
+		this.state = {
+			todos: []
+		};
   }
 
   render() {
-      var todos = [];
+      var todos = this.state.todos;
 
 			var shownTodos = todos.filter(function (todo) {
 				switch (this.state.nowShowing) {
