@@ -3,14 +3,65 @@ import './App.css';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import TodoItem from '../TodoItem/TodoItem';
+import Requester from '../Utils/Requester.js';
 
 class App extends Component {
   constructor(props) {
 		super(props);
 		this.state = {
-			todos: []
+			user: {},
+			todos: [],
+			editing: null
 		};
-  }
+
+		this.addTodo = this.addTodo.bind(this);
+		this.clearCompleted = this.clearCompleted.bind(this);
+		this.cancel = this.cancel.bind(this);
+		this.edit = this.edit.bind(this);
+		this.destroy = this.destroy.bind(this);
+		this.toggle = this.toggle.bind(this);
+		this.toggleAll = this.toggleAll.bind(this);
+		this.save = this.save.bind(this);
+	}
+	
+	componentWillMount() {
+		
+	}
+
+	addTodo(title) {
+		console.log(title);
+	}
+
+	clearCompleted() {
+		let todos = this.state.todos.filter(todo => {
+			return !todo.completed;
+		});
+		this.setState({ todos });
+	}
+
+	cancel() {
+
+	}
+
+	edit() {
+
+	}
+
+	destroy() {
+
+	}
+
+	toggle() {
+
+	}
+
+	save() {
+
+	}
+
+	toggleAll() {
+
+	}
 
   render() {
       var todos = this.state.todos;
@@ -31,11 +82,11 @@ class App extends Component {
 					<TodoItem
 						key={todo.id}
 						todo={todo}
-						onToggle={this.toggle.bind(this, todo)}
-						onDestroy={this.destroy.bind(this, todo)}
-						onEdit={this.edit.bind(this, todo)}
+						onToggle={this.toggle(todo)}
+						onDestroy={this.destroy(todo)}
+						onEdit={this.edit(todo)}
 						editing={this.state.editing === todo.id}
-						onSave={this.save.bind(this, todo)}
+						onSave={this.save(todo)}
             onCancel={this.cancel}
           />
 				);
@@ -74,7 +125,7 @@ class App extends Component {
 			}
     return (
       <div>
-        <Header/>
+        <Header addTodo={this.addTodo} />
         {this.main}
         {this.footer}
       </div>

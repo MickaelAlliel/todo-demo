@@ -5,7 +5,8 @@ class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			ENTER_KEY: 13
+			ENTER_KEY: 13,
+			newTodo: ''
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -26,7 +27,7 @@ class Header extends Component {
 		var val = this.state.newTodo.trim();
 
 		if (val) {
-			this.props.model.addTodo(val);
+			this.props.addTodo(val);
 			this.setState({newTodo: ''});
 		}
 	}
