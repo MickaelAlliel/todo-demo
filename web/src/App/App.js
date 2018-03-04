@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
@@ -14,7 +13,7 @@ class App extends Component {
   }
 
   render() {
-      var todos = this.props.model.todos;
+      var todos = [];
 
 			var shownTodos = todos.filter(function (todo) {
 				switch (this.state.nowShowing) {

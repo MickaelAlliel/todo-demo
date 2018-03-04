@@ -4,8 +4,10 @@ import './Header.css';
 class Header extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
 
-		var ENTER_KEY = 13;
+		};
+		this.ENTER_KEY = 13;
 	}
 
 	handleChange(event) {

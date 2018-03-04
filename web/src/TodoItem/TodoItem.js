@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import './TodoItem.css';
 
@@ -6,8 +7,8 @@ class TodoItem extends Component {
   constructor(props) {
     super(props);
 
-    var ESCAPE_KEY = 27;
-	  var ENTER_KEY = 13;
+    this.ESCAPE_KEY = 27;
+	  this.ENTER_KEY = 13;
   }
 
   handleSubmit(event) {
@@ -60,7 +61,7 @@ class TodoItem extends Component {
    */
   componentDidUpdate(prevProps) {
     if (!prevProps.editing && this.props.editing) {
-      var node = React.findDOMNode(this.refs.editField);
+      var node = ReactDOM.findDOMNode(this.refs.editField);
       node.focus();
       node.setSelectionRange(node.value.length, node.value.length);
     }
