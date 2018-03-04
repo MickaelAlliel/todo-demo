@@ -1,85 +1,10 @@
 const UserHandlers = require('../handlers/user');
-const Joi = require('joi');
-var routes = [];
+var express = require('express');
+var router = express.Router();
 
-routes.push({
-    method: 'GET',
-    path: '/users/{id}',
-    config: {
-        handler: UserHandlers.GetUserById,
-        description: 'Retrieves a user by its ID',
-        tags: ['api'],
-        plugins: {
-            'hapi-swagger': {
-                payloadType: 'form'
-            }
-        },
-        validate: {
-            params: {
-                id: Joi.string().required()
-            }
-        }
-    }
-});
+router.get('/:id', UserHandlers.GetUserById);
+router.get('/:machine/:machineId', UserHandlers.GetUserByMachineId);
+router.post('/', UserHandlers.CreateUser);
+router.delete('/:id', UserHandlers.DeleteUser);
 
-routes.push({
-    method: 'GET',
-    path: '/users/machine/{machineId}',
-    config: {
-        handler: UserHandlers.GetUserByMachineId,
-        description: 'Retrieves a user by its Machine ID',
-        tags: ['api'],
-        plugins: {
-            'hapi-swagger': {
-                payloadType: 'form'
-            }
-        },
-        validate: {
-            params: {
-                machineId: Joi.string().required()
-            }
-        }
-    }
-});
-
-routes.push({
-    method: 'POST',
-    path: '/users',
-    config: {
-        handler: UserHandlers.CreateUser,
-        description: 'Creates a new user',
-        tags: ['api'],
-        plugins: {
-            'hapi-swagger': {
-                payloadType: 'form'
-            }
-        },
-        validate: {
-            payload: {
-                machineId: Joi.string().required()
-            }
-        }
-    }
-});
-
-routes.push({
-    method: 'DELETE',
-    path: '/users/{id}',
-    config: {
-        handler: UserHandlers.DeleteUser,
-        description: 'Delete the specified user',
-        tags: ['api'],
-        plugins: {
-            'hapi-swagger': {
-                payloadType: 'form'
-            }
-        },
-        validate: {
-            params: {
-                id: Joi.string().required()
-            }
-        }
-    }
-});
-
-module.exports = routes;
+module.exports = router;

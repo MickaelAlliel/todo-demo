@@ -9,14 +9,10 @@
   "author": "Mickael Alliel",
   "license": "ISC",
   "dependencies": {
-    "good": "^8.1.0",
-    "good-console": "^7.1.0",
-    "good-squeeze": "^5.0.2",
-    "hapi": "^17.2.0",
-    "hapi-swagger": "^9.1.1",
-    "inert": "^5.1.0",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
     "mongoose": "^5.0.7",
-    "vision": "^5.3.1"
+    "morgan": "^1.9.0"
   },
   "devDependencies": {}
 }

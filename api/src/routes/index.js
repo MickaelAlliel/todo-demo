@@ -1,12 +1,9 @@
-const todoRoutes = require('./todo');
-const userRoutes = require('./user');
+var express = require('express');
+var router = express.Router();
 
-const statusRoute = {
-    method: 'GET',
-    path: '/',
-    handler: (request, h) => {
-        return {statusCode: 200, error: false, message: 'Uptime: ' + process.uptime()}
-    }
-}
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.send({statusCode: 200, error: false, message: 'Uptime: ' + process.uptime()})
+});
 
-module.exports = [statusRoute].concat(todoRoutes, userRoutes);
+module.exports = router;

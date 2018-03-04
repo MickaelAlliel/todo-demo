@@ -1,66 +1,74 @@
-const mongoose = require('mongoose');
-const Boom = require('boom');
 const UserModel = require('../models/user');
 
-exports.GetUserById = async (request, h) => {
-    if (!request.params.id) {
-        throw Boom.badRequest('User ID is a required parameter')
+exports.GetUserById = async (req, res, next) => {
+    if (!req.params.id) {
+        return res.status(400).send({statusCode: 400, error: true, message: 'User ID is a required parameter'})
     }
-    let userId = request.params.id;
+    let userId = req.params.id;
     const query = UserModel.findById(userId);
     try {
         var user = await query.exec();
     } catch (err) {
-        return Boom.internal('Could not find user', err);
+        if (err) return res.status(500).send({statusCode: 500, error: true, message: err})
     }
     if (!user) {
-        return Boom.notFound('User not found');
+        return res.status(404).send({statusCode: 404, error: true, message: 'User not found'})
     }
-    return {statusCode: 200, error: false, message: user}
+    if (!res.headersSent) {
+        return res.status(200).send({statusCode: 200, error: false, message: user})
+    }
 };
 
-exports.GetUserByMachineId = async (request, h) => {
-    if (!request.params.machineId) {
-        throw Boom.badRequest('User\'s Machine ID is a required parameter')
+exports.GetUserByMachineId = async (req, res, next) => {
+    if (!req.params.machineId) {
+        return res.status(400).send({statusCode: 400, error: true, message: 'User\'s Machine ID is a required parameter'})
     }
-    let machineId = request.params.machineId;
+    let machineId = req.params.machineId;
     const query = UserModel.findOne({machine_id: machineId});
     try {
         var user = await query.exec();
     } catch (err) {
-        return Boom.internal('Could not find user', err);
+        if (err) return res.status(500).send({statusCode: 500, error: true, message: err})
     }
     if (!user) {
-        return Boom.notFound('User not found');
+        return res.status(404).send({statusCode: 404, error: true, message: 'User not found'})
     }
-    return {statusCode: 200, error: false, message: user}
+    if (!res.headersSent) {
+        return res.status(200).send({statusCode: 200, error: false, message: user})
+    }
 };
 
-exports.CreateUser = async (request, h) => {
-    if (!request.payload || !request.payload.machineId) {
-        throw Boom.badRequest('Missing required parameter Machine ID');
+exports.CreateUser = (req, res, next) => {
+    if (!req.body || !req.body.machineId) {
+        return res.status(400).send({statusCode: 400, error: true, message: 'User Machine ID is a required parameter'})
     }
     var user = new UserModel();
-    user.machine_id = request.payload.machineId;
-    await user.save((err) => {
-        if (err) throw Boom.internal('Could not save new user', err);
+    user.machine_id = req.body.machineId;
+    user.save((err) => {
+        if (err) return res.status(500).send({statusCode: 500, error: true, message: err})
+
+        if (!res.headersSent) {
+            return res.status(200).send({statusCode: 200, error: false, message: user})
+        }
     })
-    return {statusCode: 200, error: false, message: user}
 };
 
-exports.DeleteUser = async (request, h) => {
-    if (!request.params.id) {
-        throw Boom.badRequest('User ID is a required parameter')
+exports.DeleteUser = async (req, res, next) => {
+    if (!req.params.id) {
+        return res.status(400).send({statusCode: 400, error: true, message: 'User ID is a required parameter'})
     }
-    let userId = request.params.id;
+    let userId = req.params.id;
     const query = UserModel.findById(userId);
     try {
         var user = await query.exec();
     } catch (err) {
-        return Boom.notFound('User not found', err);
+        if (err) return res.status(500).send({statusCode: 500, error: true, message: err})
     }
     user.remove((err) => {
-        if (err) throw Boom.expectationFailed('Could not delete user', err);
+        if (err) return res.status(500).send({statusCode: 500, error: true, message: err})
+
+        if (!res.headersSent) {
+            return res.status(200).send({statusCode: 200, error: false, message: 'Successfully deleted user'})
+        }
     });
-    return {statusCode: 200, error: false, message: 'Successfully deleted user'}
 };

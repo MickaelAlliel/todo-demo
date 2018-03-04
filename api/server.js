@@ -1,42 +1,45 @@
 'use strict';
-const Hapi = require('hapi');
-const Good = require('good');
-const HapiSwagger = require('hapi-swagger');
-const Vision = require('vision');
-const Inert = require('inert');
+const express = require('express');
+const app = express();
+const logger = require('morgan')
+const bodyParser = require('body-parser');
 const config = require('./config');
 const dbConnection = require('./src/utils/dbConnection');
-const Routes = require('./src/routes');
+const IndexRoutes = require('./src/routes/index');
+const TodosRoutes = require('./src/routes/todo');
+const UsersRoutes = require('./src/routes/user');
 
-// Create a server with a host and port
-const server = new Hapi.Server({ host: 'localhost', port: 3000 });
+// Initialize Logging
+app.use(logger("combined"));
 
-async function registerServer() {
-    // Register routes
-    await server.route(Routes);
+// Initialize Parsers
+app.use(bodyParser.json());
 
-    // Register logging and documentation plugin
-    await server.register([
-        Inert,
-        Vision,
-        { plugin: HapiSwagger, options: config.swaggerOptions },
-        { plugin: Good, options: config.goodOptions }
-    ], {
-        //routes: { prefix: '/api' }
-    });
-}
+// Initialize Routes
+app.use('/', IndexRoutes);
+app.use('/todos', TodosRoutes);
+app.use('/users', UsersRoutes);
+
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    let err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+  
+    // render the error page
+    res.status(err.status || 500);
+    return res.send({statusCode: err.status || 500, error: true, message: err.message});
+});
 
 // Start the server
-async function start() {
-    try {
-        await registerServer();
-        await server.start();
-    }
-    catch (err) {
-        console.error(err);
-        process.exit(1);
-    }
-    server.log('info', `Server running at: ${server.info.uri}`);
-};
-
-start();
+app.listen(config.port, () => {
+    console.log(`API Listening on http://localhost:${config.port}/`);
+});
