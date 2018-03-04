@@ -3,7 +3,7 @@ import './App.css';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import TodoItem from '../TodoItem/TodoItem';
-import Requester from '../Utils/Requester.js';
+import Requester from '../Utils/Requester';
 
 class App extends Component {
   constructor(props) {
@@ -25,11 +25,13 @@ class App extends Component {
 	}
 	
 	componentWillMount() {
-		
+
 	}
 
 	addTodo(title) {
-		console.log(title);
+		let todos = this.state.todos;
+		todos.push({id: title, title: title, completed: false});
+		this.setState({todos});
 	}
 
 	clearCompleted() {
@@ -40,27 +42,40 @@ class App extends Component {
 	}
 
 	cancel() {
+		this.setState({editing: null});
+	}
+
+	edit(todo) {
 
 	}
 
-	edit() {
-
+	destroy(todo) {
+		let todos = this.state.todos.filter(curTodo => {
+			return curTodo.id != todo.id;
+		});
+		this.setState({ todos });
 	}
 
-	destroy() {
-
+	toggle(todo) {
+		let todos = this.state.todos;
+		todos.forEach((val, index) => {
+			if (val.id == todo.id) {
+				todos[index].completed = !todos[index].completed;
+			}
+		});
+		this.setState({ todos });
 	}
 
-	toggle() {
-
-	}
-
-	save() {
-
+	save(todo) {
+		this.setState({editing: null});
 	}
 
 	toggleAll() {
-
+		let todos = this.state.todos;
+		todos.forEach(val => {
+			val.completed = !val.completed;
+		});
+		this.setState({ todos });
 	}
 
   render() {
@@ -82,12 +97,12 @@ class App extends Component {
 					<TodoItem
 						key={todo.id}
 						todo={todo}
-						onToggle={this.toggle(todo)}
-						onDestroy={this.destroy(todo)}
-						onEdit={this.edit(todo)}
+						onToggle={this.toggle.bind(this, todo)}
+						onDestroy={this.destroy.bind(this, todo)}
+						onEdit={this.edit.bind(this, todo)}
 						editing={this.state.editing === todo.id}
-						onSave={this.save(todo)}
-            onCancel={this.cancel}
+						onSave={this.save.bind(this, todo)}
+            onCancel={this.cancel.bind(this)}
           />
 				);
 			}, this);
@@ -110,14 +125,14 @@ class App extends Component {
 
 			if (todos.length) {
 				this.main = (
-					<section class="main">
+					<section className="main">
 						<input
-							class="toggle-all"
+							className="toggle-all"
 							type="checkbox"
 							onChange={this.toggleAll}
 							checked={activeTodoCount === 0}
 						/>
-						<ul class="todo-list">
+						<ul className="todo-list">
 							{todoItems}
 						</ul>
 					</section>
