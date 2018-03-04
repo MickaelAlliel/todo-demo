@@ -5,9 +5,11 @@ class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-
+			ENTER_KEY: 13
 		};
-		this.ENTER_KEY = 13;
+
+		this.handleChange = this.handleChange.bind(this);
+		this.handleNewTodoKeyDown = this.handleNewTodoKeyDown.bind(this);
 	}
 
 	handleChange(event) {
@@ -15,7 +17,7 @@ class Header extends Component {
 	}
 
 	handleNewTodoKeyDown(event) {
-		if (event.keyCode !== this.ENTER_KEY) {
+		if (event.keyCode !== this.state.ENTER_KEY) {
 			return;
 		}
 

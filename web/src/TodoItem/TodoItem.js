@@ -6,9 +6,16 @@ import './TodoItem.css';
 class TodoItem extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      ESCAPE_KEY: 27,
+      ENTER_KEY: 13
+    };
 
-    this.ESCAPE_KEY = 27;
-	  this.ENTER_KEY = 13;
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.getInitialState = this.getInitialState.bind(this);
   }
 
   handleSubmit(event) {
