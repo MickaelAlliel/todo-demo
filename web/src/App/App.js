@@ -26,6 +26,7 @@ class App extends Component {
 		this.save = this.save.bind(this);
 		this.createUser = this.createUser.bind(this);
 		this.updateShowing = this.updateShowing.bind(this);
+		this.duplicate = this.duplicate.bind(this);
 	}
 
 	componentWillMount() {
@@ -49,6 +50,14 @@ class App extends Component {
 		let todos = this.state.todos;
 		todos.push(todo);
 		this.setState({todos});
+	}
+
+	async duplicate(todo) {
+		let response = await Requester.DuplicateTodo(todo._id);
+		let duplicateTodo = response.data.message;
+		let todos = this.state.todos;
+		todos.push(duplicateTodo);
+		this.setState({ todos });
 	}
 
 	clearCompleted() {
@@ -131,6 +140,7 @@ class App extends Component {
 				todo={todo}
 				onToggle={this.toggle.bind(this, todo)}
 				onDestroy={this.destroy.bind(this, todo)}
+				onDuplicate={this.duplicate.bind(this, todo)}
 				onEdit={this.edit.bind(this, todo)}
 				editing={this.state.editing === todo._id}
 				onSave={this.save.bind(this, todo)}

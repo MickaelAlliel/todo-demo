@@ -84,6 +84,7 @@ class TodoItem extends Component {
 							{this.props.todo.title}
 						</label>
 						<button className="destroy" onClick={() => {this.props.onDestroy(this.props.todo)}} />
+            <button className="duplicate" onClick={() => {this.props.onDuplicate(this.props.todo)}} />
 					</div>
 					<input
 						ref="editField"
