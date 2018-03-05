@@ -5,10 +5,10 @@
   "dependencies": {
     "axios": "^0.18.0",
     "classnames": "^2.2.5",
-    "node-machine-id": "^1.1.10",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-scripts": "1.1.1"
+    "react-scripts": "1.1.1",
+    "uuid": "^3.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

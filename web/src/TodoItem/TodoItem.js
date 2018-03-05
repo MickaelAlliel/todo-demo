@@ -29,15 +29,15 @@ class TodoItem extends Component {
   }
 
   handleEdit() {
-    this.props.onEdit();
+    this.props.onEdit(this.props.todo, this.state.editText);
     this.setState({editText: this.props.todo.title});
   }
 
   handleKeyDown(event) {
-    if (event.which === this.ESCAPE_KEY) {
+    if (event.which === this.state.ESCAPE_KEY) {
       this.setState({editText: this.props.todo.title});
       this.props.onCancel(event);
-    } else if (event.which === this.ENTER_KEY) {
+    } else if (event.which === this.state.ENTER_KEY) {
       this.handleSubmit(event);
     }
   }
@@ -50,14 +50,6 @@ class TodoItem extends Component {
 
   getInitialState() {
     return {editText: this.props.todo.title};
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      nextProps.todo !== this.props.todo ||
-      nextProps.editing !== this.props.editing ||
-      nextState.editText !== this.state.editText
-    );
   }
 
   /**
@@ -86,12 +78,12 @@ class TodoItem extends Component {
 							className="toggle"
 							type="checkbox"
 							checked={this.props.todo.completed}
-							onChange={this.props.onToggle}
+							onChange={() => {this.props.onToggle(this.props.todo)}}
 						/>
 						<label onDoubleClick={this.handleEdit}>
 							{this.props.todo.title}
 						</label>
-						<button className="destroy" onClick={this.props.onDestroy} />
+						<button className="destroy" onClick={() => {this.props.onDestroy(this.props.todo)}} />
 					</div>
 					<input
 						ref="editField"

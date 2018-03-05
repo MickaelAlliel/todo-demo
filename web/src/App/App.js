@@ -4,6 +4,7 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import TodoItem from '../TodoItem/TodoItem';
 import Requester from '../Utils/Requester';
+import Utils from '../Utils/Utils';
 
 class App extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class App extends Component {
 		this.state = {
 			user: {},
 			todos: [],
-			editing: null
+			editing: null,
+			nowShowing: "ALL_TODOS",
 		};
 
 		this.addTodo = this.addTodo.bind(this);
@@ -22,20 +24,36 @@ class App extends Component {
 		this.toggle = this.toggle.bind(this);
 		this.toggleAll = this.toggleAll.bind(this);
 		this.save = this.save.bind(this);
+		this.createUser = this.createUser.bind(this);
+		this.updateShowing = this.updateShowing.bind(this);
 	}
-	
+
 	componentWillMount() {
-
+		this.createUser();
 	}
 
-	addTodo(title) {
+	updateShowing(nowShowing) {
+		this.setState({ nowShowing });
+	}
+
+	async createUser() {
+		let machineId = Utils.getUuid();
+		let response = await Requester.CreateUser(machineId);
+		let user = response.data.message;
+		this.setState({ user });
+	}
+
+	async addTodo(title) {
+		let response = await Requester.AddTodo(title, this.state.user._id);
+		let todo = response.data.message;
 		let todos = this.state.todos;
-		todos.push({id: title, title: title, completed: false});
+		todos.push(todo);
 		this.setState({todos});
 	}
 
 	clearCompleted() {
-		let todos = this.state.todos.filter(todo => {
+		let todos = this.state.todos.filter(async todo => {
+			await Requester.DeleteTodo(todo._id);
 			return !todo.completed;
 		});
 		this.setState({ todos });
@@ -46,33 +64,43 @@ class App extends Component {
 	}
 
 	edit(todo) {
-
+		this.setState({ editing: todo._id })
 	}
 
-	destroy(todo) {
+	async destroy(todo) {
+		await Requester.DeleteTodo(todo._id)
 		let todos = this.state.todos.filter(curTodo => {
-			return curTodo.id != todo.id;
+			return curTodo._id !== todo._id;
 		});
 		this.setState({ todos });
 	}
 
 	toggle(todo) {
 		let todos = this.state.todos;
-		todos.forEach((val, index) => {
-			if (val.id == todo.id) {
+		todos.forEach(async (val, index) => {
+			if (val._id === todo._id) {
+				await Requester.UpdateTodo(todos[index]._id, todos[index].title, !todos[index].completed);
 				todos[index].completed = !todos[index].completed;
 			}
 		});
 		this.setState({ todos });
 	}
 
-	save(todo) {
-		this.setState({editing: null});
+	async save(todo, newText) {
+		let todoIndex = this.state.todos.indexOf(todo);
+		if (todoIndex === -1) {
+			return;
+		}
+		let todos = this.state.todos;
+		todos[todoIndex].title = newText;
+		this.setState({ editing: null });
+		await Requester.UpdateTodo(todos[todoIndex]._id, todos[todoIndex].title, todos[todoIndex].completed);
 	}
 
 	toggleAll() {
 		let todos = this.state.todos;
 		todos.forEach(val => {
+			Requester.UpdateTodo(val._id, val.title, !val.completed);
 			val.completed = !val.completed;
 		});
 		this.setState({ todos });
@@ -95,14 +123,14 @@ class App extends Component {
 			var todoItems = shownTodos.map(function (todo) {
 				return (
 					<TodoItem
-						key={todo.id}
+						key={todo._id}
 						todo={todo}
 						onToggle={this.toggle.bind(this, todo)}
 						onDestroy={this.destroy.bind(this, todo)}
 						onEdit={this.edit.bind(this, todo)}
-						editing={this.state.editing === todo.id}
+						editing={this.state.editing === todo._id}
 						onSave={this.save.bind(this, todo)}
-            onCancel={this.cancel.bind(this)}
+            			onCancel={this.cancel.bind(this)}
           />
 				);
 			}, this);
@@ -119,6 +147,7 @@ class App extends Component {
 						count={activeTodoCount}
 						completedCount={completedCount}
 						nowShowing={this.state.nowShowing}
+						updateShowing={this.updateShowing}
 						onClearCompleted={this.clearCompleted}
 					/>;
 			}

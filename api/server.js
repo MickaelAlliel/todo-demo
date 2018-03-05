@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const logger = require('morgan')
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const config = require('./config');
 const dbConnection = require('./src/utils/dbConnection');
@@ -11,6 +12,9 @@ const UsersRoutes = require('./src/routes/user');
 
 // Initialize Logging
 app.use(logger("combined"));
+
+// Initialize CORS
+app.use(cors());
 
 // Initialize Parsers
 app.use(bodyParser.json());

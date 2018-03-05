@@ -1,12 +1,12 @@
-import {machineIdSync} from 'node-machine-id';
+const uuidv4 = require('uuid/v4');
 var Utils = {};
 
 Utils.pluralize = (count, word) => {
     return count === 1 ? word : word + 's';
 }
 
-Utils.getMachineId = () => {
-    return machineIdSync();
+Utils.getUuid = () => {
+    return uuidv4();
 }
 
 export default Utils;

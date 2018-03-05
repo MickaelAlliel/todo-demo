@@ -26,7 +26,7 @@ class Footer extends Component {
 					</span>
 					<ul className="filters">
 						<li>
-							<a
+							<a onClick={() => {this.props.updateShowing("ALL_TODOS")}}
 								href="#/"
 								className={classNames({selected: nowShowing === "ALL_TODOS"})}>
 									All
@@ -34,7 +34,7 @@ class Footer extends Component {
 						</li>
 						{' '}
 						<li>
-							<a
+							<a onClick={() => {this.props.updateShowing("ACTIVE_TODOS")}}
 								href="#/active"
 								className={classNames({selected: nowShowing === "ACTIVE_TODOS"})}>
 									Active
@@ -42,7 +42,7 @@ class Footer extends Component {
 						</li>
 						{' '}
 						<li>
-							<a
+							<a onClick={() => {this.props.updateShowing("COMPLETED_TODOS")}}
 								href="#/completed"
 								className={classNames({selected: nowShowing === "COMPLETED_TODOS"})}>
 									Completed
