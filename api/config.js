@@ -1,4 +1,10 @@
+var port = 4000;
+var dbUri = "mongodb://localhost/todoapp";
+if (process.env.DOCKERIZED == 'yes') {
+    dbUri = "mongodb://mongo/todoapp";
+}
+
 module.exports = {
-    port: 4000,
-    dbUri: "mongodb://localhost/todoapp",
+    port: dbUri,
+    dbUri: dbUri,
 }

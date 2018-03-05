@@ -1,7 +1,16 @@
 var config = require('../../config');
 var mongoose = require('mongoose');
 
-mongoose.connect(config.dbUri);
+var connectWithRetry = function() {
+  return mongoose.connect(config.dbUri, function(err) {
+    if (err) {
+      console.error('Failed to connect to mongo on startup - retrying in 5 sec');
+      setTimeout(connectWithRetry, 5000);
+    }
+  });
+};
+
+connectWithRetry();
 
 mongoose.connection.on('connected', function () {
   console.log('mongodb connection established at : ' + config.dbUri);
@@ -9,6 +18,7 @@ mongoose.connection.on('connected', function () {
 
 mongoose.connection.on('error', function (err) {
   console.log('mongodb connection error : ' + err);
+  mongoose.disconnect();
 });
 
 mongoose.connection.on('disconnected', function () {
