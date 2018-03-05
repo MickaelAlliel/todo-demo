@@ -1,4 +1,6 @@
 'use strict';
+const rook = require('rookout/auto_start');
+
 const express = require('express');
 const app = express();
 const logger = require('morgan')
