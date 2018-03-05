@@ -18,7 +18,6 @@ mongoose.connection.on('connected', function () {
 
 mongoose.connection.on('error', function (err) {
   console.log('mongodb connection error : ' + err);
-  mongoose.disconnect();
 });
 
 mongoose.connection.on('disconnected', function () {

@@ -1,6 +1,6 @@
 FROM node:8.9.4
-RUN export NODE_ENV=production
-RUN export DOCKERIZED=yes
+ENV NODE_ENV=production
+ENV DOCKERIZED=yes
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app
