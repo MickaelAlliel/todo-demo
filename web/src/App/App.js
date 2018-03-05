@@ -52,15 +52,16 @@ class App extends Component {
 	}
 
 	clearCompleted() {
-		let todos = this.state.todos.filter(async todo => {
-			await Requester.DeleteTodo(todo._id);
-			return !todo.completed;
+		this.state.todos.forEach(todo => {
+			console.log(todo);
+			if (todo.completed) {
+				this.destroy(todo);
+			}
 		});
-		this.setState({ todos });
 	}
 
 	cancel() {
-		this.setState({editing: null});
+		this.setState({ editing: null });
 	}
 
 	edit(todo) {
@@ -68,6 +69,9 @@ class App extends Component {
 	}
 
 	async destroy(todo) {
+		if (!todo.completed) {
+			todo.completed = false;
+		}
 		await Requester.DeleteTodo(todo._id)
 		let todos = this.state.todos.filter(curTodo => {
 			return curTodo._id !== todo._id;
@@ -77,9 +81,9 @@ class App extends Component {
 
 	toggle(todo) {
 		let todos = this.state.todos;
-		todos.forEach(async (val, index) => {
+		todos.forEach((val, index) => {
 			if (val._id === todo._id) {
-				await Requester.UpdateTodo(todos[index]._id, todos[index].title, !todos[index].completed);
+				Requester.UpdateTodo(todos[index]._id, todos[index].title, !todos[index].completed);
 				todos[index].completed = !todos[index].completed;
 			}
 		});
@@ -107,66 +111,69 @@ class App extends Component {
 	}
 
   render() {
-      var todos = this.state.todos;
+	var todos = this.state.todos;
 
-			var shownTodos = todos.filter(function (todo) {
-				switch (this.state.nowShowing) {
-				case "ACTIVE_TODOS":
-					return !todo.completed;
-				case "COMPLETED_TODOS":
-					return todo.completed;
-				default:
-					return true;
-				}
-			}, this);
+	var shownTodos = todos.filter(function (todo) {
+		switch (this.state.nowShowing) {
+		case "ACTIVE_TODOS":
+			return !todo.completed;
+		case "COMPLETED_TODOS":
+			return todo.completed;
+		default:
+			return true;
+		}
+	}, this);
 
-			var todoItems = shownTodos.map(function (todo) {
-				return (
-					<TodoItem
-						key={todo._id}
-						todo={todo}
-						onToggle={this.toggle.bind(this, todo)}
-						onDestroy={this.destroy.bind(this, todo)}
-						onEdit={this.edit.bind(this, todo)}
-						editing={this.state.editing === todo._id}
-						onSave={this.save.bind(this, todo)}
-            			onCancel={this.cancel.bind(this)}
-          />
-				);
-			}, this);
+	var todoItems = shownTodos.map(function (todo) {
+		return (
+			<TodoItem
+				key={todo._id}
+				todo={todo}
+				onToggle={this.toggle.bind(this, todo)}
+				onDestroy={this.destroy.bind(this, todo)}
+				onEdit={this.edit.bind(this, todo)}
+				editing={this.state.editing === todo._id}
+				onSave={this.save.bind(this, todo)}
+				onCancel={this.cancel.bind(this)}
+	/>
+		);
+	}, this);
 
-			var activeTodoCount = todos.reduce(function (accum, todo) {
-				return todo.completed ? accum : accum + 1;
-			}, 0);
+	var activeTodoCount = todos.reduce(function (accum, todo) {
+		return todo.completed ? accum : accum + 1;
+	}, 0);
 
-			var completedCount = todos.length - activeTodoCount;
+	var completedCount = todos.length - activeTodoCount;
 
-			if (activeTodoCount || completedCount) {
-				this.footer =
-					<Footer
-						count={activeTodoCount}
-						completedCount={completedCount}
-						nowShowing={this.state.nowShowing}
-						updateShowing={this.updateShowing}
-						onClearCompleted={this.clearCompleted}
-					/>;
-			}
+	if (activeTodoCount || completedCount) {
+		this.footer =
+			<Footer
+				count={activeTodoCount}
+				completedCount={completedCount}
+				nowShowing={this.state.nowShowing}
+				updateShowing={this.updateShowing}
+				onClearCompleted={this.clearCompleted}
+			/>;
+	}
 
-			if (todos.length) {
-				this.main = (
-					<section className="main">
-						<input
-							className="toggle-all"
-							type="checkbox"
-							onChange={this.toggleAll}
-							checked={activeTodoCount === 0}
-						/>
-						<ul className="todo-list">
-							{todoItems}
-						</ul>
-					</section>
-				);
-			}
+	if (todos.length) {
+		this.main = (
+			<section className="main">
+				<input
+					className="toggle-all"
+					type="checkbox"
+					onChange={this.toggleAll}
+					checked={activeTodoCount === 0}
+				/>
+				<ul className="todo-list">
+					{todoItems}
+				</ul>
+			</section>
+		);
+	} else {
+		this.main = null;
+	}
+	
     return (
       <div>
         <Header addTodo={this.addTodo} />
