@@ -8,7 +8,7 @@ exports.GetAllTodos = async (req, res, next) => {
     }
 };
 
-exports.AddTodo = async (req, res, next) => {
+exports.AddTodo = async (req, res, next) => { console.log(req.body);
     if (!req.body || !req.body.title) {
         return res.status(400).send({statusCode: 400, error: true, message: 'Missing required payload parameter <Title>'})
     }
@@ -23,16 +23,16 @@ exports.UpdateTodo = async (req, res, next) => {
     if (!req.params.id) {
         return res.status(400).send({statusCode: 400, error: true, message: 'Missing required parameter Todo ID'})
     }
-    let todoId = req.params.id;
-    const query = await global.Store.find({id: todoId});
+    const todoId = req.params.id;
+    const query = await global.Store.findById(todoId);
+    let todo = query;
     if (!todo) {
         return res.status(404).send({statusCode: 404, error: true, message: 'Could not find todo'})
     }
-    let todo = query[0];
     if (req.body.title) {
         todo.title = req.body.title;
     }
-    if (req.body.completed) {
+    if (req.body.completed !== null) {
         todo.completed = req.body.completed;
     }
     const response = await global.Store.save(todo, todoId);
@@ -44,24 +44,20 @@ exports.DeleteTodo = async (req, res, next) => {
         return res.status(400).send({statusCode: 400, error: true, message: 'Missing required parameter Todo ID'});
     }
     let todoId = req.params.id;
-    const query = await global.Store.find({id: todoId});
-    if (!todo) {
-        return res.status(404).send({statusCode: 404, error: true, message: 'Could not find todo'})
-    }
     const response = await global.Store.remove(todoId);
-    return res.status(200).send({statusCode: 200, error: false, message: 'Deleted all matching items'});
+    return res.status(200).send({statusCode: 200, error: false, message: 'Deleted successfully'});
 };
 
 exports.DuplicateTodo = async (req, res, next) => {
     if (!req.params.id) {
         return res.status(400).send({statusCode: 400, error: true, message: 'Missing required parameter Todo ID'});
     }
-    let todoId = req.params.id;
-    const query = await global.Store.find({id: todoId});
+    const todoId = req.params.id;
+    const query = await global.Store.findById(todoId);
+    let todo = query;
     if (!todo) {
         return res.status(404).send({statusCode: 404, error: true, message: 'Could not find todo'})
     }
-    let todo = query[0];
     let newTodo = {};
     newTodo.title = todo.title;
     newTodo.completed = todo.completed;

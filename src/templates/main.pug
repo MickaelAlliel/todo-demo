@@ -2,5 +2,6 @@ section(class="main")
     input(class="toggle-all" type="checkbox")
     label(for="toggle-all") Mark all as complete
     ul(class="todo-list")
-        forEach(todo in todos)
-            include todo.pug
+        if(shownTodos.length)
+            each todo in shownTodos
+                include todo.pug

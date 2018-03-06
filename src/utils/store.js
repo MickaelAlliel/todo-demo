@@ -6,7 +6,11 @@
  */
 class Store {
     constructor() {
-        this.todos = [];
+        this.todos = [{
+            id: new Date().getTime(),
+            title: 'test todo list',
+            completed: false
+        }];
     }
 }
 
@@ -22,7 +26,7 @@ Store.prototype.find = function(query) {
     return new Promise((resolve, reject) => {
         try {
             let todos = this.todos;
-            todos.filter( todo => {
+            todos = todos.filter( todo => {
                 for (let q in query) {
                     if (query[q] !== todo[q]) {
                         return false;
@@ -31,6 +35,27 @@ Store.prototype.find = function(query) {
                 return true;
             });
             resolve(todos);
+        }
+        catch (err) {
+            reject(err);
+        }
+    });
+};
+
+/**
+ * Finds items based on a query given as a JS object
+ *
+ * @param {string} id The id to match
+ * @returns {Promise}
+ */
+Store.prototype.findById = function(id) {
+    return new Promise((resolve, reject) => {
+        try {
+            let todos = this.todos;
+            todos.forEach( todo => {
+                if (todo.id == id)
+                    resolve(todo);
+            });
         }
         catch (err) {
             reject(err);
