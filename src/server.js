@@ -11,7 +11,6 @@ const path = require('path');
 
 const IndexRouter = require('./routes/index');
 const TodosRouter = require('./routes/todo');
-const UsersRouter = require('./routes/user');
 
 
 // Initialize Logging
@@ -28,9 +27,9 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 
 // Initialize Routes
+app.use('/static', express.static(path.join(__dirname, 'static')));
 app.use('/', IndexRouter);
 app.use('/todos', TodosRouter);
-app.use('/users', UsersRouter);
 
 
 // catch 404 and forward to error handler
