@@ -10,6 +10,8 @@ const setEventListeners = () => {
     $('.duplicate').on('click', duplicateTodo);
     $('.todo-label').on('dblclick', updateTodo);
     $('.toggle').on('change', toggle);
+    $('.toggle-all').on('change', toggleAll);
+    $('.clear-completed').on('click', clearCompleted);
 };
 
 $().ready(() => {

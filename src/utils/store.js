@@ -140,6 +140,48 @@ Store.prototype.remove = function(id) {
 };
 
 /**
+ * Will clear all completed todos
+ *
+ * @returns {Promise}
+ */
+Store.prototype.ClearCompleted = function() {
+    return new Promise((resolve, reject) => {
+        try {
+            let todos = this.todos;
+            for (let i = 0; i < todos.length; i++) {
+                if (todos[i].completed) {
+                    todos.splice(i, 1);
+                }
+            }
+            this.todos = todos;
+            resolve(todos);
+        } catch (err) {
+            reject(err);
+        }
+    });
+};
+
+/**
+ * Will toggle all todos
+ *
+ * @returns {Promise}
+ */
+Store.prototype.ToggleAll = function() {
+    return new Promise((resolve, reject) => {
+        try {
+            let todos = this.todos;
+            for (let i = 0; i < todos.length; i++) {
+                todos[i].completed = !todos[i].completed;
+            }
+            this.todos = todos;
+            resolve(todos);
+        } catch (err) {
+            reject(err);
+        }
+    });
+};
+
+/**
  * Will drop all storage and start fresh
  *
  * @returns {Promise}

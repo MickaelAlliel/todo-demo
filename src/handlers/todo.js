@@ -64,3 +64,13 @@ exports.DuplicateTodo = async (req, res, next) => {
     const response = await global.Store.save(newTodo);
     return res.status(200).send({statusCode: 200, error: false, message: response})
 };
+
+exports.ToggleAll = async (req, res, next) => {
+    const query = await global.Store.ToggleAll();
+    return res.status(200).send({statusCode: 200, error: false, message: 'Cleared all complete todos'})
+};
+
+exports.ClearCompleted = async (req, res, next) => {
+    const query = await global.Store.ClearCompleted();
+    return res.status(200).send({statusCode: 200, error: false, message: 'Cleared all complete todos'})
+};

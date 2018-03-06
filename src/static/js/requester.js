@@ -78,11 +78,19 @@ const toggle = (e) => {
 }
 
 const toggleAll = () => {
-    console.log('toggleall');
-    // REQUEST HERE
+    $.ajax('/todos/toggleall', {
+        method: 'POST'
+    })
+    .done(function() {
+        location.reload();
+    });
 }
 
 const clearCompleted = () => {
-    console.log('clearcompleted');
-    // REQUEST HERE
+    $.ajax('/todos/clear', {
+        method: 'POST'
+    })
+    .done(function() {
+        location.reload();
+    });
 }
