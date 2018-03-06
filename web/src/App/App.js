@@ -99,16 +99,16 @@ class App extends Component {
 
 	toggleAll() {
 		let todos = this.state.todos;
-		todos.forEach(val => {
-			Requester.UpdateTodo(val._id, val.title, !val.completed);
-			val.completed = !val.completed;
+		todos.forEach( todo => {
+			Requester.UpdateTodo(todo._id, todo.title, !todo.completed);
+			todo.completed = !todo.completed;
 		});
 		this.setState({ todos });
 	}
 
 	getShownTodos() {
 		const todos = this.state.todos;
-		let shownTodos = todos.filter((todo) => {
+		let shownTodos = todos.filter( todo => {
 			switch (this.state.nowShowing) {
 			case "ACTIVE_TODOS":
 				return !todo.completed;
@@ -123,29 +123,31 @@ class App extends Component {
 	}
 
 	getActiveTodoCount() {
-		let activeTodoCount = todos.reduce((sum, todo) => {
+		const activeTodoCount = this.state.todos.reduce( (sum, todo) => {
 			return todo.completed ? sum : sum + 1;
 		}, 0);
 		return activeTodoCount;
 	}
 
 	getCompletedTodoCount() {
-		return this.state.todos.length - this.getActiveTodoCount();
+		const activeTodos = this.getActiveTodoCount();
+		console.log(activeTodos);
+		return this.state.todos.length - activeTodos;
 	}
 
 	renderTodoItems(shownTodos) {
-		let todoItems = shownTodos.map(function (todo) {
+		let todoItems = shownTodos.map((todo) => {
 			return (
 				<TodoItem
-					key={todo._id}
-					todo={todo}
-					onToggle={this.toggle}
-					onDestroy={this.destroy}
-					onDuplicate={this.duplicate}
-					onEdit={this.edit.bind}
-					editing={this.state.editing === todo._id}
-					onSave={this.save}
-					onCancel={this.cancel}
+					key={ todo._id }
+					todo={ todo }
+					onToggle={ todo => this.toggle(todo) }
+					onDestroy={ todo => this.destroy(todo) }
+					onDuplicate={ todo => this.duplicate(todo) }
+					onEdit={ todo => this.edit(todo) }
+					editing={ this.state.editing === todo._id}
+					onSave={ todo => this.save(todo) }
+					onCancel={ todo => this.cancel(todo) }
 				/>
 			);
 		});
@@ -153,17 +155,17 @@ class App extends Component {
 	}
 
 	renderMain() {
-		if (todos.length) {
+		if (this.state.todos.length) {
 			return (
 				<section className="main">
 					<input
 						className="toggle-all"
 						type="checkbox"
-						onChange={this.toggleAll}
-						checked={this.getActiveTodoCount() === 0}
+						onChange={ () => this.toggleAll() }
+						checked={ this.getActiveTodoCount() === 0 }
 					/>
 					<ul className="todo-list">
-						{this.renderTodoItems()}
+						{ this.renderTodoItems(this.getShownTodos()) }
 					</ul>
 				</section>
 			);
@@ -173,14 +175,16 @@ class App extends Component {
 	}
 
 	renderFooter() {
+		const activeTodoCount = this.getActiveTodoCount();
+		const completedCount = this.getCompletedTodoCount();
 		if (activeTodoCount || completedCount) {
 			return (
 				<Footer
-					count={this.getActiveTodoCount()}
-					completedCount={this.getCompletedTodoCount()}
-					nowShowing={this.state.nowShowing}
-					updateShowing={this.updateShowing}
-					onClearCompleted={this.clearCompleted}
+					count={ activeTodoCount }
+					completedCount={ activeTodoCount }
+					nowShowing={ types => this.state.nowShowing(types) }
+					updateShowing={ todo => this.updateShowing(todo) }
+					onClearCompleted={ () => this.clearCompleted() }
 				/>
 			);
 		} else {
@@ -191,9 +195,9 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Header addTodo={this.addTodo} />
-        {this.renderMain()}
-        {this.renderFooter()}
+        <Header addTodo={ title => this.addTodo(title) } />
+        { this.renderMain() }
+        { this.renderFooter() }
       </div>
     );
   }

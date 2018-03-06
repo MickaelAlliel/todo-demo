@@ -1,16 +1,13 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import './Header.css';
+const ENTER_KEY = 13;
 
-class Header extends Component {
+class Header extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			ENTER_KEY: 13,
 			newTodo: ''
 		};
-
-		this.handleChange = this.handleChange.bind(this);
-		this.handleNewTodoKeyDown = this.handleNewTodoKeyDown.bind(this);
 	}
 
 	handleChange(event) {
@@ -18,7 +15,7 @@ class Header extends Component {
 	}
 
 	handleNewTodoKeyDown(event) {
-		if (event.keyCode !== this.state.ENTER_KEY) {
+		if (event.keyCode !== ENTER_KEY) {
 			return;
 		}
 
@@ -41,8 +38,8 @@ class Header extends Component {
 					className="new-todo"
 					placeholder="What needs to be done?"
 					value={this.state.newTodo}
-					onKeyDown={this.handleNewTodoKeyDown}
-					onChange={this.handleChange}
+					onKeyDown={e => { this.handleNewTodoKeyDown(e) }}
+					onChange={e => { this.handleChange(e) }}
 					autoFocus={true}
 				/>
 			</header>
