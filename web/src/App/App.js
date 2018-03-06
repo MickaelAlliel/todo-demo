@@ -15,18 +15,6 @@ class App extends Component {
 			editing: null,
 			nowShowing: "ALL_TODOS",
 		};
-
-		this.addTodo = this.addTodo.bind(this);
-		this.clearCompleted = this.clearCompleted.bind(this);
-		this.cancel = this.cancel.bind(this);
-		this.edit = this.edit.bind(this);
-		this.destroy = this.destroy.bind(this);
-		this.toggle = this.toggle.bind(this);
-		this.toggleAll = this.toggleAll.bind(this);
-		this.save = this.save.bind(this);
-		this.createUser = this.createUser.bind(this);
-		this.updateShowing = this.updateShowing.bind(this);
-		this.duplicate = this.duplicate.bind(this);
 	}
 
 	componentWillMount() {
@@ -38,23 +26,23 @@ class App extends Component {
 	}
 
 	async createUser() {
-		let machineId = Utils.getUuid();
-		let response = await Requester.CreateUser(machineId);
-		let user = response.data.message;
+		const machineId = Utils.getUuid();
+		const response = await Requester.CreateUser(machineId);
+		const user = response.data.message;
 		this.setState({ user });
 	}
 
 	async addTodo(title) {
-		let response = await Requester.AddTodo(title, this.state.user._id);
-		let todo = response.data.message;
+		const response = await Requester.AddTodo(title, this.state.user._id);
+		const todo = response.data.message;
 		let todos = this.state.todos;
 		todos.push(todo);
 		this.setState({todos});
 	}
 
 	async duplicate(todo) {
-		let response = await Requester.DuplicateTodo(todo._id);
-		let duplicateTodo = response.data.message;
+		const response = await Requester.DuplicateTodo(todo._id);
+		const duplicateTodo = response.data.message;
 		let todos = this.state.todos;
 		todos.push(duplicateTodo);
 		this.setState({ todos });
@@ -62,7 +50,6 @@ class App extends Component {
 
 	clearCompleted() {
 		this.state.todos.forEach(todo => {
-			console.log(todo);
 			if (todo.completed) {
 				this.destroy(todo);
 			}
@@ -79,7 +66,7 @@ class App extends Component {
 
 	async destroy(todo) {
 		if (!todo.completed) {
-			todo.completed = false;
+			todo.completed = true;
 		}
 		await Requester.DeleteTodo(todo._id)
 		let todos = this.state.todos.filter(curTodo => {
@@ -100,7 +87,7 @@ class App extends Component {
 	}
 
 	async save(todo, newText) {
-		let todoIndex = this.state.todos.indexOf(todo);
+		const todoIndex = this.state.todos.indexOf(todo);
 		if (todoIndex === -1) {
 			return;
 		}
@@ -119,76 +106,94 @@ class App extends Component {
 		this.setState({ todos });
 	}
 
-  render() {
-	var todos = this.state.todos;
-
-	var shownTodos = todos.filter(function (todo) {
-		switch (this.state.nowShowing) {
-		case "ACTIVE_TODOS":
-			return !todo.completed;
-		case "COMPLETED_TODOS":
-			return todo.completed;
-		default:
-			return true;
-		}
-	}, this);
-
-	var todoItems = shownTodos.map(function (todo) {
-		return (
-			<TodoItem
-				key={todo._id}
-				todo={todo}
-				onToggle={this.toggle.bind(this, todo)}
-				onDestroy={this.destroy.bind(this, todo)}
-				onDuplicate={this.duplicate.bind(this, todo)}
-				onEdit={this.edit.bind(this, todo)}
-				editing={this.state.editing === todo._id}
-				onSave={this.save.bind(this, todo)}
-				onCancel={this.cancel.bind(this)}
-	/>
-		);
-	}, this);
-
-	var activeTodoCount = todos.reduce(function (accum, todo) {
-		return todo.completed ? accum : accum + 1;
-	}, 0);
-
-	var completedCount = todos.length - activeTodoCount;
-
-	if (activeTodoCount || completedCount) {
-		this.footer =
-			<Footer
-				count={activeTodoCount}
-				completedCount={completedCount}
-				nowShowing={this.state.nowShowing}
-				updateShowing={this.updateShowing}
-				onClearCompleted={this.clearCompleted}
-			/>;
+	getShownTodos() {
+		const todos = this.state.todos;
+		let shownTodos = todos.filter((todo) => {
+			switch (this.state.nowShowing) {
+			case "ACTIVE_TODOS":
+				return !todo.completed;
+			case "COMPLETED_TODOS":
+				return todo.completed;
+			case "ALL_TODOS":
+			default:
+				return true;
+			}
+		});
+		return shownTodos;
 	}
 
-	if (todos.length) {
-		this.main = (
-			<section className="main">
-				<input
-					className="toggle-all"
-					type="checkbox"
-					onChange={this.toggleAll}
-					checked={activeTodoCount === 0}
+	getActiveTodoCount() {
+		let activeTodoCount = todos.reduce((sum, todo) => {
+			return todo.completed ? sum : sum + 1;
+		}, 0);
+		return activeTodoCount;
+	}
+
+	getCompletedTodoCount() {
+		return this.state.todos.length - this.getActiveTodoCount();
+	}
+
+	renderTodoItems(shownTodos) {
+		let todoItems = shownTodos.map(function (todo) {
+			return (
+				<TodoItem
+					key={todo._id}
+					todo={todo}
+					onToggle={this.toggle}
+					onDestroy={this.destroy}
+					onDuplicate={this.duplicate}
+					onEdit={this.edit.bind}
+					editing={this.state.editing === todo._id}
+					onSave={this.save}
+					onCancel={this.cancel}
 				/>
-				<ul className="todo-list">
-					{todoItems}
-				</ul>
-			</section>
-		);
-	} else {
-		this.main = null;
+			);
+		});
+		return todoItems;
 	}
-	
+
+	renderMain() {
+		if (todos.length) {
+			return (
+				<section className="main">
+					<input
+						className="toggle-all"
+						type="checkbox"
+						onChange={this.toggleAll}
+						checked={this.getActiveTodoCount() === 0}
+					/>
+					<ul className="todo-list">
+						{this.renderTodoItems()}
+					</ul>
+				</section>
+			);
+		} else {
+			return null;
+		}
+	}
+
+	renderFooter() {
+		if (activeTodoCount || completedCount) {
+			return (
+				<Footer
+					count={this.getActiveTodoCount()}
+					completedCount={this.getCompletedTodoCount()}
+					nowShowing={this.state.nowShowing}
+					updateShowing={this.updateShowing}
+					onClearCompleted={this.clearCompleted}
+				/>
+			);
+		} else {
+			return null;
+		}
+	}
+
+  render() {
     return (
       <div>
         <Header addTodo={this.addTodo} />
-        {this.main}
-        {this.footer}
+        {this.renderMain()}
+        {this.renderFooter()}
       </div>
     );
   }
