@@ -1,6 +1,6 @@
 const UserHandlers = require('../handlers/user');
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+let router = express.Router();
 
 router.get('/:id', UserHandlers.GetUserById);
 router.get('/:machine/:machineId', UserHandlers.GetUserByMachineId);

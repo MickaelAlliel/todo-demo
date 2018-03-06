@@ -1,6 +1,6 @@
 const TodoHandlers = require('../handlers/todo');
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+let router = express.Router();
 
 router.get('/', TodoHandlers.GetAllTodos);
 router.get('/user/:id', TodoHandlers.GetUserTodos);
