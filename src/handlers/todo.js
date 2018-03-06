@@ -1,14 +1,5 @@
-const UserModel = require('../models/user');
-const TodoModel = require('../models/todo');
-
-
 exports.GetAllTodos = async (req, res, next) => {
-    const query = TodoModel.find({}).populate('author');
-    try {
-        var todos = await query.exec();
-    } catch (err) {
-        return res.status(500).send({statusCode: 500, error: true, message: err});
-    }
+    let todos = store.todos;
     if (!todos) {
         return res.status(400).send({statusCode: 200, error: true, message: 'No todos found'})
     }
@@ -17,38 +8,13 @@ exports.GetAllTodos = async (req, res, next) => {
     }
 };
 
-exports.GetUserTodos = async (req, res, next) => {
-    if (!req.params.id) {
-        return res.status(400).send({statusCode: 400, error: true, message: 'User ID is a required parameter'})
-    }
-    let userId = req.params.id;
-    const query = TodoModel.find({author: userId}).populate('author');
-    try {
-        var todos = await query.exec();
-    } catch (err) {
-        return res.status(500).send({statusCode: 500, error: true, message: err});
-    }
-    if (!todos) {
-        return res.status(404).send({statusCode: 404, error: true, message: 'No todos found'});
-    }
-    if (!res.headersSent) {
-        return res.status(200).send({statusCode: 200, error: false, message: todos})
-    }
-};
-
 exports.AddTodo = (req, res, next) => {
-    if (!req.body || !req.body.title || !req.body.userId) {
-        return res.status(400).send({statusCode: 400, error: true, message: 'Missing required payload parameter'})
+    if (!req.body || !req.body.title) {
+        return res.status(400).send({statusCode: 400, error: true, message: 'Missing required payload parameter <Title>'})
     }
     var todo = new TodoModel();
     todo.title = req.body.title;
-    todo.author = req.body.userId;
-    todo.save(err => {
-        if (err) return res.status(417).send({statusCode: 417, error: true, message: err})
-        if (!res.headersSent) {
-            return res.status(200).send({statusCode: 200, error: false, message: todo})
-        }
-    });
+    return res.status(200).send({statusCode: 200, error: false, message: todo})
 };
 
 exports.UpdateTodo = async (req, res, next) => {
@@ -56,12 +22,7 @@ exports.UpdateTodo = async (req, res, next) => {
         return res.status(400).send({statusCode: 400, error: true, message: 'Missing required parameter Todo ID'})
     }
     let todoId = req.params.id;
-    const query = TodoModel.findById(todoId).populate('author');
-    try {
-        var todo = await query.exec();
-    } catch (err) {
-        return res.status(500).send({statusCode: 500, error: true, message: err})
-    }
+    let todo = store.todos.indexOf()
     if (!todo) {
         return res.status(404).send({statusCode: 404, error: true, message: 'Could not find todo'})
     }
