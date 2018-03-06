@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 const rook = require('rookout/auto_start');
 
 const express = require('express');
@@ -12,6 +12,9 @@ const path = require('path');
 const IndexRouter = require('./routes/index');
 const TodosRouter = require('./routes/todo');
 
+const Store = require('./utils/store');
+// Initializing global Store as an in-memory database
+global.Store = new Store();
 
 // Initialize Logging
 app.use(logger("combined"));

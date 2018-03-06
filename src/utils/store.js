@@ -18,7 +18,7 @@ class Store {
  * @example
  * store.find({foo: 'bar', hello: 'world'})
  */
-Store.prototype.find = (query) => {
+Store.prototype.find = function(query) {
     return new Promise((resolve, reject) => {
         try {
             let todos = this.todos;
@@ -42,7 +42,7 @@ Store.prototype.find = (query) => {
  * Will retrieve all data from the collection
  * @returns {Promise}
  */
-Store.prototype.findAll = () => {
+Store.prototype.findAll = function() {
     return new Promise((resolve, reject) => {
         try {
             let todos = this.todos;
@@ -62,7 +62,7 @@ Store.prototype.findAll = () => {
  * @param {number} id An optional param to enter an ID of an item to update
  * @returns {Promise}
  */
-Store.prototype.save = (updateData, id) => {
+Store.prototype.save = function(updateData, id) {
     return new Promise((resolve, reject) => {
         try {
             let todos = this.todos;
@@ -96,7 +96,7 @@ Store.prototype.save = (updateData, id) => {
  * @param {number} id The ID of the item you want to remove
  * @returns {Promise}
  */
-Store.prototype.remove = (id) => {
+Store.prototype.remove = function(id) {
     return new Promise((resolve, reject) => {
         try {
             let todos = this.todos;
@@ -119,7 +119,7 @@ Store.prototype.remove = (id) => {
  *
  * @returns {Promise}
  */
-Store.prototype.drop = () => {
+Store.prototype.drop = function() {
     return new Promise((resolve, reject) => {
         try {
             this.todos = [];
@@ -129,3 +129,5 @@ Store.prototype.drop = () => {
         }
     });
 };
+
+module.exports = Store;
