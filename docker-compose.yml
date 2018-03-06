@@ -1,27 +1,13 @@
 version: '2'
 services:
-  mongo:
-    container_name: mongo
-    image: mongo
-    ports:
-      - "27017:27017"
-  api:
-    container_name: api
+  todoapp:
+    container_name: todoapp
     restart: always
-    build: ./api
+    build: .
     ports:
       - "4000:4000"
     links:
-      - mongo
       - rookout-agent
-  web:
-    container_name: web
-    restart: always
-    build: ./web
-    ports:
-      - "5000:5000"
-    links:
-      - api
   rookout-agent:
     container_name: rookout-agent
     image: rookout/agent

@@ -1,18 +1,11 @@
-# Rookout Tutorial App
+# How to use ?
 
-## Running with Docker-Compose
-1. Run `docker-compose up -d`
-2. Go to [http://localhost:5000](http://localhost:5000)
+## Running with Docker
 
-## Running with Makefile
-1. Run `make -j run-prod`
-2. Go to [http://localhost:5000](http://localhost:5000)
+- Insert your agent token in the docker-compose.yml
+- Run `docker-compose up`
 
-__If you already have a mongod service running on port 27017 run this command instead:__
-`make -j run-prod-nodb`
+## Running Locally
 
-### What runs behinds the scene?
-- MongoDB instance
-- Rookout Agent
-- Node.JS Express based API backend (with the node rook)
-- Node.JS React based frontend
+- Insert your agent token in the Makefile
+- Run `make -j run-prod`
