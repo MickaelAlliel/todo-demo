@@ -6,11 +6,7 @@
  */
 class Store {
     constructor() {
-        this.todos = [{
-            id: new Date().getTime(),
-            title: 'test todo list',
-            completed: false
-        }];
+        this.todos = [];
     }
 }
 
