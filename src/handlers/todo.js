@@ -11,7 +11,7 @@ exports.AddTodo = async (req, res, next) => {
         return res.status(400).send({message: 'Missing required payload parameter <Title>'})
     }
     let todo = {};
-    todo.title = req.body.title;
+    todo.title = cleanString(req.body.title);
     todo.completed = false;
     const response = await global.Store.save(todo);
     return res.status(200).send({message: response})
@@ -27,7 +27,7 @@ exports.UpdateTodo = async (req, res, next) => {
     if (!todo) {
         return res.status(404).send({message: 'No todo found'})
     }
-    todo.title = req.body.title;
+    todo.title = cleanString(req.body.title);
     todo.completed = req.body.completed;
     const response = await global.Store.save(todo, todoId);
     return res.status(200).send({message: response});
@@ -52,8 +52,8 @@ exports.DuplicateTodo = async (req, res, next) => {
         return res.status(404).send({message: 'No todo found'})
     }
     let newTodo = {};
-    newTodo.title = todo.title;
-    newTodo.completed = todo.completed;
+    newTodo.title = todo.completed;
+    newTodo.completed = todo.title;
     const response = await global.Store.save(newTodo);
     return res.status(200).send({message: response})
 };
@@ -66,4 +66,11 @@ exports.ToggleAll = async (req, res, next) => {
 exports.ClearCompleted = async (req, res, next) => {
     const query = await global.Store.ClearCompleted();
     return res.status(200).send({message: 'Cleared all complete todos'})
+};
+
+const cleanString = (title) => {
+    const regex = new RegExp(/[\u0590-\u05FF|>|<|;|`|&|\/|\\]/g);
+    let trimmedTitle = title.replace(regex, '');
+    trimmedTitle = trimmedTitle.trim();
+    return trimmedTitle;
 };
