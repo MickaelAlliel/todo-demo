@@ -21,8 +21,7 @@ class Store {
 Store.prototype.find = function(query) {
     return new Promise((resolve, reject) => {
         try {
-            let todos = this.todos;
-            todos = todos.filter( todo => {
+            const todos = this.todos.filter( todo => {
                 for (let q in query) {
                     if (query[q] !== todo[q]) {
                         return false;
@@ -47,8 +46,7 @@ Store.prototype.find = function(query) {
 Store.prototype.findById = function(id) {
     return new Promise((resolve, reject) => {
         try {
-            let todos = this.todos;
-            todos.forEach( todo => {
+            this.todos.forEach( todo => {
                 if (todo.id == id)
                     resolve(todo);
             });
@@ -66,8 +64,7 @@ Store.prototype.findById = function(id) {
 Store.prototype.findAll = function() {
     return new Promise((resolve, reject) => {
         try {
-            let todos = this.todos;
-            resolve(todos);
+            resolve(this.todos);
         }
         catch (err) {
             reject(err);
@@ -143,7 +140,7 @@ Store.prototype.remove = function(id) {
 Store.prototype.ClearCompleted = function() {
     return new Promise((resolve, reject) => {
         try {
-            let todos = todos.filter(todo => {
+            const todos = todos.filter(todo => {
                 if (todo.completed) {
                     return false;
                 }
