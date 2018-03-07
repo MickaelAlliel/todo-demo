@@ -8,7 +8,7 @@ exports.GetAllTodos = async (req, res, next) => {
     }
 };
 
-exports.AddTodo = async (req, res, next) => { console.log(req.body);
+exports.AddTodo = async (req, res, next) => {
     if (!req.body || !req.body.title) {
         return res.status(400).send({statusCode: 400, error: true, message: 'Missing required payload parameter <Title>'})
     }
