@@ -9,7 +9,7 @@ const setEventListeners = () => {
     $('.destroy').on('click', deleteTodo);
     $('.duplicate').on('click', duplicateTodo);
     $('.todo-label').on('dblclick', updateTodo);
-    $('.toggle').on('change', toggle);
+    $('.toggle').on('change', updateTodo);
     $('.toggle-all').on('change', toggleAll);
     $('.clear-completed').on('click', clearCompleted);
 };

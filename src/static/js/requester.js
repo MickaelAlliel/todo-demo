@@ -32,49 +32,50 @@ const duplicateTodo = (e) => {
     });
 }
 
-const updateTodo = (e) => {
-    const todoElement = $(e.target.parentElement.parentElement);
-    todoElement.addClass('editing');
-
-    const editingElement = $(e.target.parentElement.nextElementSibling);
-    editingElement.focus();
-    editingElement[0].setSelectionRange(editingElement.val().length, editingElement.val().length); // Focusing on end of input
-    $(editingElement).on('keydown', (e) => {
-        if (e.keyCode == '27') {
-            $('.editing').removeClass('editing');
-        }
-    });
-
-    $(editingElement).on('keypress', (e) => {
-        if (e.keyCode == '13') {
-            const todoId = $(e.target.parentElement).data('id');
-            const title = $(e.target).val();
-            $.ajax('/todos/' + todoId, {
-                contentType: "application/json",
-                method: 'PUT',
-                data: JSON.stringify({title: title}),
-                dataType: 'json'
-            })
-            .done(function() {
-                location.reload();
-            });
-            $('.editing').removeClass('editing');
-        }
-    });
+const getTodoData = (todoElement) => {
+    const title = todoElement.find('.edit').val();
+    const completed = todoElement.find('.toggle').is(':checked');
+    const id = todoElement.data('id');
+    return {id: id, title: title, completed: completed};
 }
 
-const toggle = (e) => {
-    const todoId = $(e.target.parentElement.parentElement).data('id');
-    const completed = $(e.target).is(":checked");
-    $.ajax('/todos/' + todoId, {
+const sendUpdateRequest = (newData) => {
+    $.ajax('/todos/' + newData.id, {
         contentType: "application/json",
         method: 'PUT',
-        data: JSON.stringify({completed: completed}),
+        data: JSON.stringify({title: newData.title, completed: newData.completed}),
         dataType: 'json'
     })
     .done(function() {
         location.reload();
     });
+}
+
+const updateTodo = (e) => {
+    if ($(e.target).hasClass('todo-label')) {
+        const todoElement = $(e.target.parentElement.parentElement);
+        todoElement.addClass('editing');
+        const editingElement = $(e.target.parentElement.nextElementSibling);
+        editingElement.focus();
+        const inputLength = editingElement.val().length;
+        editingElement[0].setSelectionRange(inputLength, inputLength); // Focusing on end of input
+        $(editingElement).on('keydown', (e) => {
+            if (e.keyCode == '27') { // Escape Key - Cancel action
+                $('.editing').removeClass('editing');
+            }
+        });
+        $(editingElement).on('keypress', (e) => {
+            if (e.keyCode == '13') { // Enter Key - Confirm action
+                const todoElement = $(e.target.parentElement);
+                const newData = getTodoData(todoElement);
+                sendUpdateRequest(newData);
+            }
+        });
+    } else if ($(e.target).hasClass('toggle')) {
+        const todoElement = $(e.target.parentElement.parentElement);
+        const newData = getTodoData(todoElement);
+        sendUpdateRequest(newData);
+    }
 }
 
 const toggleAll = () => {

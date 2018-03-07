@@ -55,7 +55,7 @@ app.use((err, req, res, next) => {
 
 const start = () => {
     app.listen(config.port, () => {
-        console.log(`API Listening on http://localhost:${config.port}/`);
+        console.log(`Server Listening on http://localhost:${config.port}/`);
     });
 }
 
