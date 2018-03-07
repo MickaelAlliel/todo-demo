@@ -1,11 +1,9 @@
 exports.GetAllTodos = async (req, res, next) => {
     const todos = await global.Store.findAll();
     if (!todos) {
-        return res.status(400).send({message: 'No todos found'})
+        return res.status(404).send({message: 'No todos found'})
     }
-    if (!res.headersSent) {
-        return res.status(200).send({message: todos})
-    }
+    return res.status(200).send({message: todos})
 };
 
 exports.AddTodo = async (req, res, next) => {
@@ -27,7 +25,7 @@ exports.UpdateTodo = async (req, res, next) => {
     const query = await global.Store.findById(todoId);
     let todo = query;
     if (!todo) {
-        return res.status(404).send({message: 'Could not find todo'})
+        return res.status(404).send({message: 'No todo found'})
     }
     todo.title = req.body.title;
     todo.completed = req.body.completed;
@@ -49,10 +47,9 @@ exports.DuplicateTodo = async (req, res, next) => {
         return res.status(400).send({message: 'Missing required parameter Todo ID'});
     }
     const todoId = req.params.id;
-    const query = await global.Store.findById(todoId);
-    let todo = query;
+    const todo = await global.Store.findById(todoId);
     if (!todo) {
-        return res.status(404).send({message: 'Could not find todo'})
+        return res.status(404).send({message: 'No todo found'})
     }
     let newTodo = {};
     newTodo.title = todo.title;
