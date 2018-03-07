@@ -1,11 +1,17 @@
 # How to use ?
 
-## Running with Docker
+## Running Locally
+
+### With Docker
 
 - Insert your agent token in the docker-compose.yml
 - Run `docker-compose up`
 
-## Running Locally
+### Without Docker
 
 - Insert your agent token in the Makefile
 - Run `make -j run-prod`
+
+## Tutorial Instructions
+
+- After running the server go to [https://app.rookout.com/](https://app.rookout.com/)

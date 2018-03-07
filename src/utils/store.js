@@ -143,12 +143,12 @@ Store.prototype.remove = function(id) {
 Store.prototype.ClearCompleted = function() {
     return new Promise((resolve, reject) => {
         try {
-            let todos = this.todos;
-            for (let i = 0; i < todos.length; i++) {
-                if (todos[i].completed) {
-                    todos.splice(i, 1);
+            let todos = todos.filter(todo => {
+                if (todo.completed) {
+                    return false;
                 }
-            }
+                return true;
+            });
             this.todos = todos;
             resolve(todos);
         } catch (err) {
