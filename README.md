@@ -51,11 +51,11 @@ Go through the [bug list](#bug-list) below and follow instructions to see some b
         3. Add this rule to line 55
         4. Before triggering the rule, let's edit it so it returns what we want
         5. In the **Rules** pane on the right, click the *Edit Rule* (pen) icon next to the rule you just added. It will open up the Rule configuration as a JSON file
-        6. On line 31 we have the "format" property, we can add after `LOG:` the variable we want to get back from the Rook. Add `{store.rookout.frame.todo}`
-        - /src/handlers/todo.js - Lines 55-56
-        - `newTodo.title` and `newTodo.completed` properties are being filled with the wrong information
+        6. On line 31 we have the "format" property, we can add after `LOG:` the variable we want to get back from the Rook. Add `{store.rookout.frame.newTodo}` to return the Todo object we duplicated and see where the error is.
+        7. We can understand from it that `newTodo.title` and `newTodo.completed` properties are being filled with the wrong information and fix it.
 
 - __Hebrew is not being accepted as part of the title when Adding or Updating a Todo.__
+    - **Reproduce:** Add a task with Hebrew characters. All Hebrew characters should not be saved.
     - /src/handlers/todo.js - Lines 14 and 30
     - Helper function `cleanString(title)` is trimming Hebrew characters.
 
