@@ -6,7 +6,7 @@
 
 - Insert your agent token in the docker-compose.yml
 - Run `docker-compose up`
-
+b
 ### Without Docker
 
 - Insert your agent token in the Makefile
